@@ -1,0 +1,238 @@
+########## 1) CARGAR EL DATASET Y LIBRERÍAS A USAR ###########
+
+library(readxl)
+library(tidyverse)
+library(dplyr)
+library(lubridate)
+library(ggplot2)
+library(gt)
+library(esquisse) # Librería para hacer mas prctico el armado de gráficos y de paso, aprender
+
+calidad_agua_embotelladora <- read_excel("calidad_agua_embotelladora.xlsx")
+View(calidad_agua_embotelladora)
+
+########## 2) VERIFICAR LA INTEGRIDAD DE LOS DATOS OBTENIDOS ###########
+
+names(calidad_agua_embotelladora) # Que variables (columnas) vamos a analizar
+summary(calidad_agua_embotelladora) # Primera aproximacion a los datos
+str(calidad_agua_embotelladora) # Verificamos tipos de datos, levels, dimensiones del dataset
+n_distinct(calidad_agua_embotelladora) # Efectivamente hay 60.000 registros
+sum(is.na(calidad_agua_embotelladora)) # No hay ningun valor faltante
+duplicated(calidad_agua_embotelladora) # No hay duplicados
+unique(calidad_agua_embotelladora$Linea_Produccion) # Variable categorica: Verificamos que solo haya 3 lineas de produccion
+unique(calidad_agua_embotelladora$Turno) #Variable categorica: Verificamos que solo haya 3 turnos de produccion
+unique(calidad_agua_embotelladora$Estado_Calidad) #Variable categorica: Verificamos que solo haya 2 estados de las muestras
+
+########## 3) ANALISIS EXPLORATORIO DE DATOS ###########
+
+# A) ¿En que linea de produccion hay mas muestras con calidad dudosa?
+
+calidad_dudosa_lineas <- calidad_agua_embotelladora %>%
+  filter(Estado_Calidad == "Resultado Marginal") %>%
+   count(Linea_Produccion) # Muestras rechazadas por linea #
+
+ggplot(calidad_dudosa_lineas, aes(x = reorder(Linea_Produccion, n), y = n)) + # Grafico
+  geom_col(fill = "#4682B4") +
+  labs(
+    title = "Muestras de calidad marginal por línea de producción"
+  ) +
+  theme_gray() +
+  theme(
+    plot.title = element_text(size = 20,
+                              face = "bold.italic",
+                              hjust = 0.5,
+                              color = "grey30"),
+    axis.title = element_blank(),
+    axis.text = element_text(size = 15, color = "grey30")
+  ) +
+  coord_flip()
+
+# B) ¿hay correlcion entre las muestras de calidad baja con la cantidad de cloro, turbidez y conductividad?
+
+calidad_dudosa_todas_las_variables <- calidad_agua_embotelladora %>%
+  filter(Estado_Calidad == "Resultado Marginal") %>%
+  select(`Recuento_Bacterias_UFC/ml`, Cloro_Libre_ppm, pH, Turbidez_NTU, Conductividad_uS, Linea_Produccion, Fecha_Hora) # Seleccionar valores de cloro y recuento bactereológico
+
+
+cor(calidad_dudosa_todas_las_variables$`Recuento_Bacterias_UFC/ml`,
+    calidad_dudosa_todas_las_variables$Cloro_Libre_ppm,
+    ) # Correlación muy baja
+
+cor(calidad_dudosa_todas_las_variables$`Recuento_Bacterias_UFC/ml`,
+    calidad_dudosa_todas_las_variables$Turbidez_NTU,
+    ) # Correlacion baja
+
+cor(calidad_dudosa_todas_las_variables$`Recuento_Bacterias_UFC/ml`,
+    calidad_dudosa_todas_las_variables$Conductividad_uS,
+    ) # Correlacion baja
+
+# C) ¿Hay outliers en las variables?
+
+range(calidad_agua_embotelladora$Temperatura_C) #No hay valores extraños para la temperatura del agua
+range(calidad_agua_embotelladora$pH) #Rango de valores de pH dentro de lo normal
+range(calidad_agua_embotelladora$Turbidez_NTU) #Posibles outliers, ver con boxplot
+range(calidad_agua_embotelladora$Conductividad_uS) # Valores normales para agua potable
+range(calidad_agua_embotelladora$Cloro_Libre_ppm) #Valores de cloro normales, altos en algunas muestras. Ver
+range(calidad_agua_embotelladora$`Recuento_Bacterias_UFC/ml`) # posibles outliers, valores elevados en algunos casos
+range(calidad_agua_embotelladora$Volumen_Llenado_muestra_ml) #Todas las muestras corresponden a una botella de medio litro (envase comercial)
+
+                      ########### Ver outliers en los valores de turbidez ##########
+
+ggplot(calidad_dudosa_todas_las_variables, aes(x = Turbidez_NTU)) +
+  geom_boxplot(fill = "#4682B4", color = "grey30", outlier.alpha = 0.5) +
+  labs(
+    title = "Distribución de Turbidez (NTU)"
+  ) +
+  theme_gray() +
+  theme(
+    plot.title = element_text(size = 20,
+                              face = "bold.italic",
+                              hjust = 0.5,
+                              color = "grey30"),
+    axis.title.x = element_blank(),
+    axis.text.x = element_text(size = 15, color = "grey30"),
+    axis.title.y = element_blank(),
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank()
+  )
+
+      ############ Ver outliers en los recuentos de bacetrias ###################
+
+ggplot(calidad_dudosa_todas_las_variables, aes(x = `Recuento_Bacterias_UFC/ml`)) +
+
+  geom_boxplot(fill = "#4682B4",
+               color = "grey30",
+               outlier.alpha = 0.5,
+               outlier.size = 2) +
+  labs(
+    title = "Distribución de Bacterias (UFC/ml)"
+  ) +
+  theme_gray() +
+  theme(
+    plot.title = element_text(size = 20,
+                              face = "bold.italic",
+                              hjust = 0.5,
+                              color = "grey30"),
+    axis.title.x = element_blank(),
+    axis.text.x = element_text(size = 15, color = "grey30"),
+    axis.title.y = element_blank(),
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank()
+  )
+
+           ########## Ver outiliers en valores de cloro ###############
+
+ggplot(calidad_dudosa_todas_las_variables, aes(x = Cloro_Libre_ppm)) + # De las 3110 muestras dudosas, solo el 25% está dentro del rango aceptable para ser consumida
+
+  geom_boxplot(fill = "#4682B4",
+               color = "grey30",
+               outlier.alpha = 0.5,
+               outlier.size = 2) +
+  labs(
+    title = "Distribución de cloro libre (ppm)"
+  ) +
+  theme_gray() +
+  theme(
+    plot.title = element_text(size = 20,
+                              face = "bold.italic",
+                              hjust = 0.5,
+                              color = "grey30"),
+    axis.title.x = element_blank(),
+    axis.text.x = element_text(size = 15, color = "grey30"),
+    axis.title.y = element_blank(),
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank()
+  )
+
+########## 4) ANALISIS DE MUESTRAS CON CALIDAD COMPROMETIDA - EMBOTELLADORA ###########
+
+# A) ¿En que lineas de produccion las muestras presentan más turbidez?
+
+
+turbidez_por_lineas <- calidad_dudosa_todas_las_variables %>%
+  filter(Turbidez_NTU > 1.5) %>%
+  count(Linea_Produccion, sort = TRUE)
+colnames(turbidez_por_lineas) <- c("Línea de Producción", "Muestras con Turbidez Elevada")
+tabla_final <- turbidez_por_lineas %>%
+  gt() %>%
+  tab_header(
+    title = "Calidad Marginal por Línea",
+    subtitle = "Muestras que exceden los 1.5 NTU"
+  ) %>%
+  cols_align(
+    align = "center",
+    columns = everything()
+  ) %>%
+  opt_stylize(color = "blue", style = 1)
+  tabla_final
+
+
+# B) ¿Influye la época del año en el recuento de bacterias?
+
+epocas_año_bacterias <- calidad_dudosa_todas_las_variables %>%
+                        select(Fecha_Hora, `Recuento_Bacterias_UFC/ml`) %>%
+                        mutate(Mes = month(Fecha_Hora, label = TRUE)) %>% # Quedarse solo con mes
+                        filter(`Recuento_Bacterias_UFC/ml` >= 2) #Filtrar los recuentos mayores de 2, valor inaceptable para consumo humano
+as.data.frame(epocas_año_bacterias) # En formato tabla y con nombres para ser mas prolijo
+
+           ######## Grafico de violin para ilustrar mejor que pasa en cada mes ######
+
+ggplot(epocas_año_bacterias, aes(x = Mes, y = `Recuento_Bacterias_UFC/ml`)) +
+  geom_violin(fill = "#4682B4", color = "grey30", alpha = 0.7) +
+  # Opcional: añadir un boxplot pequeño dentro ayuda a ver la mediana
+  geom_boxplot(width = 0.1, color = "grey30", outlier.shape = NA) +
+  labs(
+    title = "Recuento de cantidad de bacterias (UFC/ml), mes a mes"
+  ) +
+  theme_gray() +
+  theme(
+    plot.title = element_text(size = 20, face = "bold.italic", hjust = 0.5, color = "grey30"),
+    axis.title = element_blank(),
+    axis.text.x = element_text(size = 12, color = "grey30"),
+    axis.text.y = element_text(size = 12, color = "grey30")
+  )
+
+
+# C) ¿Influye la época del año en la turbidez del agua?
+
+epocas_año_turbidez <- calidad_dudosa_todas_las_variables %>%
+                       select(Fecha_Hora, Turbidez_NTU) %>%
+                       mutate(Mes = month(Fecha_Hora, label = TRUE)) %>% # Quedarse solo con mes
+                       filter(Turbidez_NTU >= 1.5) #Filtrar  los valores mayores a 1.5, porque no son aceptables para consumo humano
+
+as.data.frame(epocas_año_turbidez) # En formato tabla y con nombres para ser mas prolijo
+
+           ###### Grafico de coordenadas polares #########
+
+ggplot(epocas_año_turbidez, aes(x = Mes, y = Turbidez_NTU)) +
+  geom_boxplot(fill = "#4682B4",
+               color = "grey30",
+               outlier.colour = "red",
+               outlier.size = 1) +
+  labs(title = "Niveles de turbidez, mes a mes") +
+  # Usamos theta = "x" para que los meses giren alrededor del círculo
+  coord_polar(theta = "x") +
+  theme_gray() +
+  theme(
+    plot.title = element_text(size = 20,
+                              face = "bold.italic",
+                              hjust = 0.5,
+                              color = "grey30"),
+    axis.title = element_blank(),
+    axis.text.x = element_text(size = 12, color = "grey30"),
+    # La escala de turbidez queda en los radios del círculo
+    axis.text.y = element_text(size = 10, color = "grey30")
+  )
+
+
+
+
+
+
+
+
+
+
+
+
+
