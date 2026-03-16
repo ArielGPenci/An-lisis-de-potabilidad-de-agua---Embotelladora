@@ -22,7 +22,8 @@ El análisis se enmarca dentro de un trabajo final para un curso sobre el el len
     
     2.A) ¿En que líneas de producción hay mas muestras de rechazada o de baja calidad?
 
-<img width="723" height="440" alt="muestras_calidad_dudosa_embotelladora" src="https://github.com/user-attachments/assets/65e524ab-5cb8-4e01-8d6c-90a9ddfa86e7" />
+
+<img width="900" height="547" alt="Rplot" src="https://github.com/user-attachments/assets/c4186c7e-4a43-418e-bb2e-8d13406a7c19" />
 
 
 
