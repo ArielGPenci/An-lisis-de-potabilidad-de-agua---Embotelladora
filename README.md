@@ -28,6 +28,7 @@ El análisis se enmarca dentro de un trabajo final para un curso sobre el el len
 Todas las líneas de producción tienen un numero similar de muestras rechazadas, lo que indica que el problema sería algo general y no particular de cada línea.
 
     2.B)  ¿hay correlcion entre las muestras de calidad baja con la cantidad de cloro, turbidez y conductividad?
+    
 <img width="241" height="126" alt="tabla correlaciones" src="https://github.com/user-attachments/assets/f3c5a271-4148-4e60-a9f6-08504ea1a747" />
 
 
