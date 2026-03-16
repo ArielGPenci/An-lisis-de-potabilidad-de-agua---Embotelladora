@@ -2,6 +2,7 @@
 El análisis se enmarca dentro de un trabajo final para un curso sobre el el lenguaje R. El mismo fue realizado integramente en el software Rstudio. El dataset es totalmente ficticio, generado a fines praácticos. Pero manteniendo el realismo.
 
 1) VERIFICACIÓN DE LA INTEGRIDAD DE LOS DATOS OBTENIDOS
+   
    1.A) Variables a analizar y valores:
    - Fecha y hora: producción durante todo el año 2025
    - Línea de producción: Líneas 1, 2 y 3
@@ -18,8 +19,11 @@ El análisis se enmarca dentro de un trabajo final para un curso sobre el el len
   - 60.000 registros obtenidos, clasificados en muestras "aprobadas" y muestras de "calidad marginal". No hay registros duplicados ni valores faltantes.
 
  2) ANÁLISIS EXPLORATORIO DE DATOS
+    
     2.A) ¿En que líneas de producción hay mas muestras de rechazada o de baja calidad?
-    <img width="723" height="440" alt="muestras_calidad_dudosa_embotelladora" src="https://github.com/user-attachments/assets/f7bd6e64-1a03-49b1-81b5-ad52d60de08e" />
-<img width="723" height="440" alt="muestras_calidad_dudosa_embotelladora" src="https://github.com/user-attachments/assets/f7bd6e64-1a03-49b1-81b5-ad52d60de08e" />
+
+<img width="723" height="440" alt="muestras_calidad_dudosa_embotelladora" src="https://github.com/user-attachments/assets/65e524ab-5cb8-4e01-8d6c-90a9ddfa86e7" />
+
+
 
 
