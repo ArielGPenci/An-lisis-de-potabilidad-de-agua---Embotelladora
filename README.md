@@ -1,3 +1,4 @@
+
 # Analisis de potabilidad de agua | Embotelladora
 El análisis se enmarca dentro de un trabajo final para un curso sobre el el lenguaje R. El mismo fue realizado integramente en el software Rstudio. El dataset es totalmente ficticio, generado a fines praácticos. Pero manteniendo el realismo.
 
@@ -28,6 +29,8 @@ El análisis se enmarca dentro de un trabajo final para un curso sobre el el len
 Todas las líneas de producción tienen un numero similar de muestras rechazadas, lo que indica que el problema sería algo general y no particular de cada línea.
 
     2.B)  ¿hay correlcion entre las muestras de calidad baja con la cantidad de cloro, turbidez y conductividad?
+
+<img width="241" height="126" alt="tabla correlaciones" src="https://github.com/user-attachments/assets/e54f2446-5efb-434e-bdf4-b153cb66958b" />
 
 
    
