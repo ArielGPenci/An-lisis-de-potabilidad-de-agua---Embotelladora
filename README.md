@@ -30,7 +30,7 @@ Todas las líneas de producción tienen un numero similar de muestras rechazadas
 
     2.B)  ¿hay correlcion entre las muestras de calidad baja con la cantidad de cloro, turbidez y conductividad?
 
-<img width="241" height="126" alt="tabla correlaciones" src="https://github.com/user-attachments/assets/e54f2446-5efb-434e-bdf4-b153cb66958b" />
+                                          <img width="241" height="126" alt="tabla correlaciones" src="https://github.com/user-attachments/assets/e54f2446-5efb-434e-bdf4-b153cb66958b" />
 
 
    
