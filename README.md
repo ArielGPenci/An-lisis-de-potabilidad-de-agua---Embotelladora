@@ -30,7 +30,8 @@ Todas las líneas de producción tienen un numero similar de muestras rechazadas
 
     2.B Valores máximos de cada variable, para ver si existen anomalías
 
-    <img width="406" height="424" alt="valores_maximos" src="https://github.com/user-attachments/assets/9d9cec24-1b02-42c8-84d2-5e8653fc1f97" />
+
+<img width="406" height="424" alt="valores_maximos" src="https://github.com/user-attachments/assets/fbdbb3ca-6555-43f7-8a0e-d293ffd71ee2" />
 
 
     
@@ -79,14 +80,7 @@ Todas las líneas de producción tienen un numero similar de muestras rechazadas
     
     
     
-    
-    
-    
-    
-    ¿hay correlcion entre las muestras de calidad baja con la cantidad de cloro, turbidez y conductividad?
-<img width="241" height="126" alt="tabla correlaciones" src="https://github.com/user-attachments/assets/fddbfef3-f2bc-4951-b7ec-e298d2e7f9a1" />
 
-No se observa una relación entre la cantidad de bacterias de las muestras con los niveles de Cloro, turbidez y conductividad.
 
 
 
